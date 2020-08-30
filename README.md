@@ -1,4 +1,6 @@
 # super-labeler-action
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FVidendum%2Fsuper-labeler-action.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FVidendum%2Fsuper-labeler-action?ref=badge_shield)
+
 
 A superpowered issue and pull request labeler for Github Actions.
 
@@ -313,3 +315,7 @@ Example:
 ---
 
 [back to top](#super-labeler-action)
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FVidendum%2Fsuper-labeler-action.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FVidendum%2Fsuper-labeler-action?ref=badge_large)
