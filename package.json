@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@actions/core": "^1.2.3",
-    "@actions/github": "^2.1.1",
+    "@actions/github": "^2.2.0",
     "minimatch": "^3.0.4",
     "minimist": "^1.2.5"
   },
