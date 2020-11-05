@@ -31,4 +31,4 @@ labels:
 #   - restyled-ignore
 restylers_version: stable
 restylers:
-  - '*'
+  - prettier
