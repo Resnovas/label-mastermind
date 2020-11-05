@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 var __awaiter =
   (this && this.__awaiter) ||
   function (thisArg, _arguments, P, generator) {
@@ -6,44 +6,44 @@ var __awaiter =
       return value instanceof P
         ? value
         : new P(function (resolve) {
-            resolve(value)
-          })
+            resolve(value);
+          });
     }
     return new (P || (P = Promise))(function (resolve, reject) {
       function fulfilled(value) {
         try {
-          step(generator.next(value))
+          step(generator.next(value));
         } catch (e) {
-          reject(e)
+          reject(e);
         }
       }
       function rejected(value) {
         try {
-          step(generator['throw'](value))
+          step(generator['throw'](value));
         } catch (e) {
-          reject(e)
+          reject(e);
         }
       }
       function step(result) {
         result.done
           ? resolve(result.value)
-          : adopt(result.value).then(fulfilled, rejected)
+          : adopt(result.value).then(fulfilled, rejected);
       }
-      step((generator = generator.apply(thisArg, _arguments || [])).next())
-    })
-  }
-Object.defineProperty(exports, '__esModule', { value: true })
-exports.parseIssueContext = exports.parsePRContext = void 0
-const api_1 = require('./api')
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+  };
+Object.defineProperty(exports, '__esModule', { value: true });
+exports.parseIssueContext = exports.parsePRContext = void 0;
+const api_1 = require('./api');
 exports.parsePRContext = (context, client, repo) =>
   __awaiter(void 0, void 0, void 0, function* () {
-    const pr = context.payload.pull_request
+    const pr = context.payload.pull_request;
     if (!pr) {
-      return
+      return;
     }
-    const num = pr.number
-    const labels = parseLabels(pr.labels)
-    const files = yield api_1.listFiles({ client, repo, num })
+    const num = pr.number;
+    const labels = parseLabels(pr.labels);
+    const files = yield api_1.listFiles({ client, repo, num });
     return {
       labels,
       num,
@@ -55,16 +55,16 @@ exports.parsePRContext = (context, client, repo) =>
         isDraft: pr.draft,
         locked: pr.locked,
         state: pr.state,
-        title: pr.title
-      }
-    }
-  })
-exports.parseIssueContext = context => {
-  const issue = context.payload.issue
+        title: pr.title,
+      },
+    };
+  });
+exports.parseIssueContext = (context) => {
+  const issue = context.payload.issue;
   if (!issue) {
-    return
+    return;
   }
-  const labels = parseLabels(issue.labels)
+  const labels = parseLabels(issue.labels);
   return {
     labels,
     num: issue.number,
@@ -73,19 +73,19 @@ exports.parseIssueContext = context => {
       description: issue.body || '',
       locked: issue.locked,
       state: issue.state,
-      title: issue.title
-    }
-  }
-}
-const parseLabels = labels => {
+      title: issue.title,
+    },
+  };
+};
+const parseLabels = (labels) => {
   if (!Array.isArray(labels)) {
-    return []
+    return [];
   }
   return labels.filter(
-    label =>
+    (label) =>
       typeof label === 'object' &&
       'name' in label &&
       'description' in label &&
-      'color' in label
-  )
-}
+      'color' in label,
+  );
+};
