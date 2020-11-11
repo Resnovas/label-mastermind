@@ -1,5 +1,5 @@
 import { PRProps } from '.'
-
+import { log } from '../'
 const TYPE = 'changesSize'
 
 export interface ConditionChangesSize {
@@ -9,7 +9,7 @@ export interface ConditionChangesSize {
 }
 
 const changesSize = (condition: ConditionChangesSize, pr: PRProps) => {
-  console.log(
+  log(
     `PR Changes=${pr.changes} Min=${condition.min}| Greater=${
       pr.changes >= condition.min
     } Max=${condition.max} Less=${
