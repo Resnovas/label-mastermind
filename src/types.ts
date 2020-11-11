@@ -68,6 +68,7 @@ export interface IssueContext extends GeneralContext {
 
 export interface Options {
   configPath: string
+  configJSON: Config
   showLogs: boolean
   dryRun: boolean
 }

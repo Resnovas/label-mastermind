@@ -4,18 +4,16 @@ import { GitHub } from '@actions/github'
 import { Config, Options, PRContext, IssueContext } from './types'
 import { labelHandler, contextHandler } from './utils'
 import { log } from './'
-import { Log } from '@videndum/utilities'
 
 let local: any
-try {
-  local = require('./localRun/config')
-  process.env.GITHUB_REPOSITORY = local.GITHUB_REPOSITORY
-} catch {}
+let context = github.context
 
-const context =
-  !github.context.payload.issue && !github.context.payload.pull_request
-    ? require('./localRun/context.json')
-    : github.context
+try {
+  local = require('../config.json')
+  process.env.GITHUB_REPOSITORY = local.GITHUB_REPOSITORY
+  if (!context.payload.issue && !context.payload.pull_request)
+    context = require(local.github_context)
+} catch {}
 
 /**
  * Super Labeler
@@ -45,6 +43,7 @@ export default class SuperLabeler {
    */
   async run() {
     try {
+      const configJSON = this.opts.configJSON
       const configPath = this.opts.configPath
       const dryRun = this.opts.dryRun
       const repo = context.repo
@@ -56,13 +55,16 @@ export default class SuperLabeler {
        * @author IvanFon, TGTGamer, jbinda
        * @since 1.0.0
        */
-      if (!fs.existsSync(configPath)) {
-        throw new Error(`config not found at "${configPath}"`)
+      let config: Config
+      if (!configJSON) {
+        if (!fs.existsSync(configPath)) {
+          throw new Error(`config not found at "${configPath}"`)
+        }
+        config = await JSON.parse(fs.readFileSync(configPath).toString())
+        log(`Config: ${JSON.stringify(config)}`, 1)
+      } else {
+        config = configJSON
       }
-      const config: Config = await JSON.parse(
-        fs.readFileSync(configPath).toString()
-      )
-      log(`Config: ${JSON.stringify(config)}`, 1)
 
       /**
        * Handle the context

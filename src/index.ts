@@ -6,19 +6,22 @@
 
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import { Options } from './types'
+import { Config, Options } from './types'
 import path from 'path'
 import superLabeler from './superLabeler'
 import { Log } from '@videndum/utilities'
-let local: any
+let local: any = undefined
+let dryRun: boolean
+let showLogs: boolean = false
 try {
-  local = require('./localRun/config')
+  local = require('../config.json')
+  dryRun = local.GH_ACTION_LOCAL_TEST || false
+  showLogs = local.SHOW_LOGS || false
 } catch {}
 
 const { GITHUB_WORKSPACE = '' } = process.env
-const dryRun = local.GH_ACTION_LOCAL_TEST || false
-const showLogs = local.SHOW_LOGS || false
-const L = new Log({ console: { enabled: showLogs } })
+
+const L = new Log({ sentry: { enabled: !showLogs, config: { dsn: '' } } })
 export function log(loggingData: string, type: number) {
   L.log({ raw: loggingData }, type)
   if (type == 1) core.debug(loggingData)
@@ -27,12 +30,16 @@ export function log(loggingData: string, type: number) {
   else core.setFailed(loggingData)
 }
 function start() {
+  const configJSON: Config =
+    core.getInput('configJSON') ||
+    (local == undefined ? undefined : require(local.configJSON))
   const configFile = core.getInput('config')
   log(`Config file ${configFile}`, 1)
   const configPath = path.join(GITHUB_WORKSPACE, configFile)
   log(`Config Path ${configPath}`, 1)
   const GITHUB_TOKEN =
-    core.getInput('GITHUB_TOKEN') || local.GITHUB_TOKEN || undefined
+    core.getInput('GITHUB_TOKEN') ||
+    (local == undefined ? undefined : local.GITHUB_TOKEN)
   if (!GITHUB_TOKEN) {
     return core.setFailed('No Token provided')
   }
@@ -40,6 +47,7 @@ function start() {
   const options: Options = {
     configPath,
     showLogs,
+    configJSON,
     dryRun
   }
   const action = new superLabeler(new github.GitHub(GITHUB_TOKEN), options)

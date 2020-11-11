@@ -105,11 +105,9 @@ typings/
 web/dist/
 
 # local config file
-src/__tests__/labels.local.json
-src/__tests__/event*.json
-src/__tests__/event*.example.json
-src/localRun/*
-!src/localRun/*.sample.*
+config*.json
+context*.json
+!*.sample.*
 
 !examples/ 
 lib/
