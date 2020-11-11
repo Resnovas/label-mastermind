@@ -99,6 +99,7 @@ Be sure that Github Actions is enabled for in your repository's settings. Super 
     - [isLocked](#islocked)
     - [isOpen](#isopen)
     - [titleMatches](#titlematches)
+    - [changesSize](#changessize)
 
 ## How it Works
 
@@ -310,6 +311,24 @@ Example:
 {
   "type": "titleMatches",
   "pattern": "/^wip:/i"
+}
+```
+
+### changesSize
+
+**Applies to: pull requests**
+
+Checks if an pull request's changes size is bigger then the `min` value and smaller then the `max` value.
+
+Note: if `max` is undefined, it's assumed to be unlimited
+
+Example:
+
+```json
+{
+  "type": "titleMatches",
+  "min": 0,
+  "max": 10
 }
 ```
 
