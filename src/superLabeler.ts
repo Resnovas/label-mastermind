@@ -8,14 +8,13 @@ import { Log } from '@videndum/utilities'
 
 let local: any
 try {
-  local = require('./LocalRunConfig')
+  local = require('./localRun/config')
+  process.env.GITHUB_REPOSITORY = local.GITHUB_REPOSITORY
 } catch {}
-
-process.env.GITHUB_REPOSITORY = local.GITHUB_REPOSITORY
 
 const context =
   !github.context.payload.issue && !github.context.payload.pull_request
-    ? require('./__tests__/context.json')
+    ? require('./localRun/context.json')
     : github.context
 
 /**
