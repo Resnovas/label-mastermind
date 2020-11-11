@@ -9,6 +9,14 @@ export interface ConditionChangesSize {
 }
 
 const changesSize = (condition: ConditionChangesSize, pr: PRProps) => {
+  console.log(
+    `PR Changes=${pr.changes} Min=${condition.min}| Greater=${
+      pr.changes >= condition.min
+    } Max=${condition.max} Less=${
+      condition.max < pr.changes || !condition.max
+    }`,
+    1
+  )
   if (
     pr.changes >= condition.min &&
     (condition.max < pr.changes || !condition.max)
