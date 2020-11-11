@@ -1,5 +1,4 @@
 import { PRProps } from '.'
-import { utils } from '../../utils'
 
 const TYPE = 'changesSize'
 
