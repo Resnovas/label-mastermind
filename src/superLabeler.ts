@@ -5,7 +5,16 @@ import { Config, Options, PRContext, IssueContext } from './types'
 import { labelHandler, contextHandler } from './utils'
 import { log } from './'
 
-const context = github.context
+let local: any
+let context = github.context
+
+try {
+  local = require('../config.json')
+  process.env.GITHUB_REPOSITORY = local.GITHUB_REPOSITORY
+  process.env.GITHUB_REPOSITORY_OWNER = local.GITHUB_REPOSITORY_OWNER
+  if (!context.payload.issue && !context.payload.pull_request)
+    context = require(local.github_context)
+} catch {}
 
 /**
  * Super Labeler
@@ -35,22 +44,29 @@ export default class SuperLabeler {
    */
   async run() {
     try {
+      const configJSON = this.opts.configJSON
       const configPath = this.opts.configPath
       const dryRun = this.opts.dryRun
-      const repo = context.repo
+      const repo: {repo: string, owner: string} = {
+        owner: process.env.GITHUB_REPOSITORY_OWNER || context.repo.owner,
+        repo: process.env.GITHUB_REPOSITORY || context.repo.repo
+      }
 
       /**
        * Get the configuration
        * @author IvanFon, TGTGamer, jbinda
        * @since 1.0.0
        */
-      if (!fs.existsSync(configPath)) {
-        throw new Error(`config not found at "${configPath}"`)
+      let config: Config
+      if (!configJSON) {
+        if (!fs.existsSync(configPath)) {
+          throw new Error(`config not found at "${configPath}"`)
+        }
+        config = await JSON.parse(fs.readFileSync(configPath).toString())
+        log(`Config: ${JSON.stringify(config)}`, 1)
+      } else {
+        config = configJSON
       }
-      const config: Config = await JSON.parse(
-        fs.readFileSync(configPath).toString()
-      )
-      log(`Config: ${JSON.stringify(config)}`, 1)
 
       /**
        * Handle the context
