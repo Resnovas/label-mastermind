@@ -11,6 +11,7 @@ let context = github.context
 try {
   local = require('../config.json')
   process.env.GITHUB_REPOSITORY = local.GITHUB_REPOSITORY
+  process.env.GITHUB_REPOSITORY_OWNER = local.GITHUB_REPOSITORY_OWNER
   if (!context.payload.issue && !context.payload.pull_request)
     context = require(local.github_context)
 } catch {}
@@ -46,7 +47,10 @@ export default class SuperLabeler {
       const configJSON = this.opts.configJSON
       const configPath = this.opts.configPath
       const dryRun = this.opts.dryRun
-      const repo = context.repo
+      const repo: {repo: string, owner: string} = {
+        owner: process.env.GITHUB_REPOSITORY_OWNER || context.repo.owner,
+        repo: process.env.GITHUB_REPOSITORY || context.repo.repo
+      }
 
       log(`Context: ${JSON.stringify(context)}`, 1)
 
@@ -165,7 +169,7 @@ export default class SuperLabeler {
           })
       }
     } catch (err) {
-      log(err.message, 5)
+      log(`Failed to run Super Labeler: `+err.message, 5)
     }
   }
 }
