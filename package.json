@@ -12,7 +12,6 @@
     "test": "./__tests__"
   },
   "scripts": {
-    "postinstall": "npm run dev:build",
     "run": "node lib/index.js",
     "build": "tsc",
     "test": "jest",
