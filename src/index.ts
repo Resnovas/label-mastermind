@@ -10,11 +10,15 @@ import { Options } from './types'
 import path from 'path'
 import superLabeler from './superLabeler'
 import { Log } from '@videndum/utilities'
+let local: any
+try {
+  local = require('./LocalRunConfig')
+} catch {}
 
-const { GITHUB_WORKSPACE = '', SHOW_LOGS, GH_ACTION_LOCAL_TEST } = process.env
-const dryRun = !!GH_ACTION_LOCAL_TEST
-const showLogs = SHOW_LOGS === 'true'
-const L = new Log({ console: { enabled: true } })
+const { GITHUB_WORKSPACE = '' } = process.env
+const dryRun = !!local.GH_ACTION_LOCAL_TEST
+const showLogs = local.SHOW_LOGS === true
+const L = new Log({ console: { enabled: showLogs } })
 export function log(loggingData: string, type: number) {
   L.log({ raw: loggingData }, type)
   if (type == 1) core.debug(loggingData)
@@ -27,7 +31,7 @@ function start() {
   log(`Config file ${configFile}`, 1)
   const configPath = path.join(GITHUB_WORKSPACE, configFile)
   log(`Config Path ${configPath}`, 1)
-  const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN')
+  const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN') || local.GITHUB_TOKEN
   if (!GITHUB_TOKEN) {
     return core.setFailed('No Token provided')
   }

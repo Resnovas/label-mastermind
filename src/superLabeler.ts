@@ -4,8 +4,19 @@ import { GitHub } from '@actions/github'
 import { Config, Options, PRContext, IssueContext } from './types'
 import { labelHandler, contextHandler } from './utils'
 import { log } from './'
+import { Log } from '@videndum/utilities'
 
-const context = github.context
+let local: any
+try {
+  local = require('./LocalRunConfig')
+} catch {}
+
+process.env.GITHUB_REPOSITORY = local.GITHUB_REPOSITORY
+
+const context =
+  !github.context.payload.issue && !github.context.payload.pull_request
+    ? require('./__tests__/context.json')
+    : github.context
 
 /**
  * Super Labeler
@@ -38,6 +49,8 @@ export default class SuperLabeler {
       const configPath = this.opts.configPath
       const dryRun = this.opts.dryRun
       const repo = context.repo
+
+      log(`Context: ${JSON.stringify(context)}`, 1)
 
       /**
        * Get the configuration

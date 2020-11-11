@@ -5,11 +5,11 @@ import changesSize, { ConditionChangesSize } from './changesSize'
 import { Condition, log, handlers as sharedHandlers } from '../'
 
 export type PRCondition =
-  | Condition
   | ConditionBranchMatches
   | ConditionFilesMatch
   | ConditionIsDraft
   | ConditionChangesSize
+  | Condition
 
 const handlers = [
   ...sharedHandlers,
