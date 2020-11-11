@@ -53,6 +53,14 @@ export default class SuperLabeler {
       }
 
       /**
+       * Capture and log context to debug for Local Running
+       * @author TGTGamer
+       * @since 1.0.0
+       */
+
+      log(`Context for local running. See readme.md for information on how to setup local running: ${JSON.stringify(context)}`, 1)
+      
+      /**
        * Get the configuration
        * @author IvanFon, TGTGamer, jbinda
        * @since 1.0.0
