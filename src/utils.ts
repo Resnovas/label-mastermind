@@ -52,7 +52,7 @@ class ContextHandler {
     if (!pr) {
       return
     }
-
+    log(`context.payload.pull_request: ` + JSON.stringify(context.payload.pull_request), 1)
     const IDNumber = pr.number
     const labels = await this.parseLabels(pr.labels)
     const files = await file.list({ client, repo, IDNumber })

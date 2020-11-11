@@ -1,4 +1,4 @@
-import { IssueCondition, PRCondition } from './conditions'
+import { IssueCondition, PRCondition } from './conditions/'
 
 export interface IssueConditionConfig {
   requires: number
