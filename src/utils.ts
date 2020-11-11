@@ -60,6 +60,7 @@ class ContextHandler {
     const IDNumber = pr.number
     const labels = await this.parseLabels(pr.labels)
     const files = await file.list({ client, repo, IDNumber })
+    const changes = await file.changes(pr.additions, pr.deletions)
 
     return {
       labels,
@@ -69,6 +70,7 @@ class ContextHandler {
         creator: pr.user.login,
         description: pr.body || '',
         files,
+        changes,
         isDraft: pr.draft,
         locked: pr.locked,
         state: pr.state,

@@ -22,19 +22,22 @@ export function log(loggingData: string, type: number) {
   else if (type < 7) core.error(loggingData)
   else core.setFailed(loggingData)
 }
-
-const configFile = core.getInput('config')
-log(`Config file ${configFile}`, 1)
-const configPath = path.join(GITHUB_WORKSPACE, configFile)
-log(`Config Path ${configPath}`, 1)
-const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN', {
-  required: true
-})
-log('Github Token Collected', 1)
-const options: Options = {
-  configPath,
-  showLogs,
-  dryRun
+function start() {
+  const configFile = core.getInput('config')
+  log(`Config file ${configFile}`, 1)
+  const configPath = path.join(GITHUB_WORKSPACE, configFile)
+  log(`Config Path ${configPath}`, 1)
+  const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN')
+  if (!GITHUB_TOKEN) {
+    return core.setFailed('No Token provided')
+  }
+  log('Github Token Collected ' + GITHUB_TOKEN, 1)
+  const options: Options = {
+    configPath,
+    showLogs,
+    dryRun
+  }
+  const action = new superLabeler(new github.GitHub(GITHUB_TOKEN), options)
+  action.run()
 }
-const action = new superLabeler(new github.GitHub(GITHUB_TOKEN), options)
-action.run()
+start()
