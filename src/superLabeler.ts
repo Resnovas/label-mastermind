@@ -64,7 +64,7 @@ export default class SuperLabeler {
       if (context.payload.pull_request) {
         const ctx = await contextHandler.parsePR(context, this.client, repo)
         if (!ctx) {
-          throw new Error('pull request not found on context')
+          throw new Error('Pull request not found on context')
         }
         log(`PR context: ${JSON.stringify(ctx)}`, 1)
         curContext = {
@@ -74,9 +74,9 @@ export default class SuperLabeler {
       } else if (context.payload.issue) {
         const ctx = await contextHandler.parseIssue(context)
         if (!ctx) {
-          throw new Error('issue not found on context')
+          throw new Error('Issue not found on context')
         }
-        log(`issue context: ${JSON.stringify(ctx)}`, 1)
+        log(`Issue context: ${JSON.stringify(ctx)}`, 1)
 
         curContext = {
           type: 'issue',

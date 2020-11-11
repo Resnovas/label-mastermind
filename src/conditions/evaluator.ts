@@ -40,6 +40,8 @@ export default function evaluator(
       conditionSetType === ConditionSetType.issue
         ? getIssueConditionHandler(condition as IssueCondition)
         : getPRConditionHandler(condition as PRCondition)
+    // @ts-ignore
+    log(handler, 1)
     return handler?.(condition as any, props as any) || false
   })
   log(`Matches: ${matches}/${requires}`, 1)
