@@ -47,7 +47,7 @@ export default class SuperLabeler {
       const configJSON = this.opts.configJSON
       const configPath = this.opts.configPath
       const dryRun = this.opts.dryRun
-      const repo: {repo: string, owner: string} = {
+      const repo: { repo: string; owner: string } = {
         owner: process.env.GITHUB_REPOSITORY_OWNER || context.repo.owner,
         repo: process.env.GITHUB_REPOSITORY || context.repo.repo
       }
@@ -58,8 +58,13 @@ export default class SuperLabeler {
        * @since 1.0.0
        */
 
-      log(`Context for local running. See readme.md for information on how to setup local running: ${JSON.stringify(context)}`, 1)
-      
+      log(
+        `Context for local running. See readme.md for information on how to setup local running: ${JSON.stringify(
+          context
+        )}`,
+        1
+      )
+
       /**
        * Get the configuration
        * @author IvanFon, TGTGamer, jbinda

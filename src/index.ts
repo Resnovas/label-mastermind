@@ -19,7 +19,6 @@ try {
   showLogs = local.SHOW_LOGS || false
 } catch {}
 
-
 const { GITHUB_WORKSPACE = '' } = process.env
 
 const L = new Log({ console: { enabled: false } })
