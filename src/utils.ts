@@ -85,8 +85,6 @@ class ContextHandler {
         throw err
       })
 
-    console.log(reviews)
-
     const pendingReview: boolean = await pullRequests
       .pendingReview(reviews.length, pr.requested_reviewers.length)
       .catch(err => {

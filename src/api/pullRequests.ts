@@ -1,4 +1,4 @@
-import { IssueApiProps, log } from '.'
+import { IssueApiProps } from '.'
 import { Reviews } from '../types'
 
 class PullRequests {

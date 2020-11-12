@@ -1,4 +1,3 @@
-import { reverse } from 'dns'
 import { PRProps } from '.'
 
 const TYPE = 'isApproved'
