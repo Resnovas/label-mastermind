@@ -32,9 +32,18 @@ class PullRequests {
     log(`Reviews: ` + reviews.toString(), 1)
     let changesRequired: number = 0
     reviews.forEach(review => {
-      if (review.state == 'REQUESTED_CHANGES') changesRequired++
+      if (review.state == 'CHANGES_REQUESTED') changesRequired++
     })
     return changesRequired > 0
+  }
+
+  async isApproved(reviews: Reviews): Promise<number> {
+    log(`Reviews: ` + reviews.toString(), 1)
+    let approved: number = 0
+    reviews.forEach(review => {
+      if (review.state == 'APPROVED') approved++
+    })
+    return approved
   }
 }
 

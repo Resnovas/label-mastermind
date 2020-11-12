@@ -101,6 +101,13 @@ class ContextHandler {
         throw err
       })
 
+    const approved: number = await pullRequests
+      .isApproved(reviews)
+      .catch(err => {
+        log(`Error thrown while handling reviews: ` + err, 5)
+        throw err
+      })
+
     return {
       labels,
       IDNumber,
@@ -108,14 +115,16 @@ class ContextHandler {
         branch: pr.head.ref,
         creator: pr.user.login,
         description: pr.body || '',
-        files,
-        changes,
-        pendingReview,
-        requestedChanges,
         isDraft: pr.draft,
         locked: pr.locked,
         state: pr.state,
-        title: pr.title
+        title: pr.title,
+        files,
+        changes,
+        reviews,
+        pendingReview,
+        requestedChanges,
+        approved
       }
     }
   }
