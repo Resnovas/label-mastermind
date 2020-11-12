@@ -76,8 +76,8 @@ class ContextHandler {
         log(`Error thrown while handling changes: ` + err, 5)
         throw err
       })
-    const pendingApproval: boolean = await pullRequests
-      .pendingApproval(pr.requested_reviewers, 0)
+    const pendingReview: boolean = await pullRequests
+      .pendingReview({ client, repo, IDNumber }, pr.requested_reviewers)
       .catch(err => {
         log(`Error thrown while handling reviews: ` + err, 5)
         throw err
@@ -92,7 +92,7 @@ class ContextHandler {
         description: pr.body || '',
         files,
         changes,
-        pendingApproval,
+        pendingReview,
         isDraft: pr.draft,
         locked: pr.locked,
         state: pr.state,

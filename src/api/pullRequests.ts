@@ -14,8 +14,16 @@ class PullRequests {
     return Additions + deletions
   }
 
-  async pendingApproval(requested_reviewers: number, reviews: number) {
-    return requested_reviewers === reviews
+  async pendingReview(
+    { client, IDNumber, repo }: IssueApiProps,
+    requested_reviews: number
+  ): Promise<boolean> {
+    const reviews = await client.pulls.listReviews({
+      ...repo,
+      pull_number: IDNumber,
+      per_page: 100
+    })
+    return reviews.data.length <= requested_reviews
   }
 }
 

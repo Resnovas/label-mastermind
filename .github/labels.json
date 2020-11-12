@@ -1221,8 +1221,8 @@
       "requires": 1,
       "conditions": [
         {
-          "type": "pendingApproval",
-          "min": true
+          "type": "pendingReview",
+          "value": true
         }
       ]
     }
