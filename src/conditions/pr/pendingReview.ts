@@ -1,5 +1,4 @@
 import { PRProps } from '.'
-import { log } from '..'
 
 const TYPE = 'pendingReview'
 
