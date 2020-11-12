@@ -28,17 +28,15 @@ class PullRequests {
     return reviews <= requested_reviews
   }
 
-  async requestedChanges(reviews: Reviews): Promise<boolean> {
-    log(`Reviews: ` + reviews.toString(), 1)
-    let changesRequired: number = 0
+  async requestedChanges(reviews: Reviews) {
+    let changes: number = 0
     reviews.forEach(review => {
-      if (review.state == 'CHANGES_REQUESTED') changesRequired++
+      if (review.state == 'CHANGES_REQUESTED') changes++
     })
-    return changesRequired > 0
+    return changes
   }
 
-  async isApproved(reviews: Reviews): Promise<number> {
-    log(`Reviews: ` + reviews.toString(), 1)
+  async isApproved(reviews: Reviews) {
     let approved: number = 0
     reviews.forEach(review => {
       if (review.state == 'APPROVED') approved++

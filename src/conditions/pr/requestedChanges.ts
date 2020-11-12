@@ -11,7 +11,7 @@ const requestedChanges = (
   condition: ConditionRequestedChanges,
   pr: PRProps
 ) => {
-  return pr.requestedChanges === condition.value
+  return pr.changes >= pr.approved
 }
 
 export default [TYPE, requestedChanges] as const

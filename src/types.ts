@@ -42,7 +42,7 @@ export interface PRProps extends Props {
   files: string[]
   reviews: Reviews
   pendingReview: boolean
-  requestedChanges: boolean
+  requestedChanges: number
   approved: number
   changes: number
 }

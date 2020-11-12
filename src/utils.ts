@@ -94,7 +94,7 @@ class ContextHandler {
         throw err
       })
 
-    const requestedChanges: boolean = await pullRequests
+    const requestedChanges: number = await pullRequests
       .requestedChanges(reviews)
       .catch(err => {
         log(`Error thrown while handling reviews: ` + err, 5)
