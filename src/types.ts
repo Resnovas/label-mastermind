@@ -82,7 +82,7 @@ export type Reviews = Review[]
 export interface Review {
   id?: number
   node_id?: string
-  user?: {}
+  user?: any
   body?: string
   state?: 'APPROVED' | '' | string
   html_url?: string
