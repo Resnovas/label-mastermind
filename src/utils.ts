@@ -247,7 +247,7 @@ class LabelHandler {
       log(`Label: ${labelID}`, 1)
 
       const shouldHaveLabel = evaluator(
-        ConditionSetType.issue,
+        ConditionSetType.pr,
         conditionsConfig,
         prProps
       )
