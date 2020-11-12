@@ -48,9 +48,11 @@ export default class SuperLabeler {
       const configPath = this.opts.configPath
       const dryRun = this.opts.dryRun
       const repo: { repo: string; owner: string } = {
-        owner: process.env.GITHUB_REPOSITORY_OWNER || context.repo.owner,
-        repo: process.env.GITHUB_REPOSITORY || context.repo.repo
+        owner: process.env.GITHUB_REPOSITORY_OWNER !== undefined ? process.env.GITHUB_REPOSITORY_OWNER : context.repo.owner,
+        repo: process.env.GITHUB_REPOSITORY !== undefined ? process.env.GITHUB_REPOSITORY : context.repo.repo,
       }
+
+      log(`Repo data: ${repo.owner}/${repo.repo}`, 1)
 
       /**
        * Capture and log context to debug for Local Running
@@ -91,9 +93,12 @@ export default class SuperLabeler {
         | { type: 'issue'; context: IssueContext }
 
       if (context.payload.pull_request) {
-        const ctx = await contextHandler.parsePR(context, this.client, repo)
+        const ctx = await contextHandler.parsePR(context, this.client, repo).catch(err => {
+          log(`Error thrown while parsing PR context: ` + err, 5)
+          throw new Error(err)
+        })
         if (!ctx) {
-          throw new Error('pull request not found on context')
+          throw new Error('Pull Request not found on context')
         }
         log(`PR context: ${JSON.stringify(ctx)}`, 1)
         curContext = {
@@ -101,9 +106,12 @@ export default class SuperLabeler {
           context: ctx
         }
       } else if (context.payload.issue) {
-        const ctx = await contextHandler.parseIssue(context)
+        const ctx = await contextHandler.parseIssue(context).catch(err => {
+          log(`Error thrown while parsing issue context: ` + err, 5)
+          throw new Error(err)
+        })
         if (!ctx) {
-          throw new Error('issue not found on context')
+          throw new Error('Issue not found on context')
         }
         log(`issue context: ${JSON.stringify(ctx)}`, 1)
 
@@ -114,7 +122,7 @@ export default class SuperLabeler {
       } else {
         log(
           `There is no context to parse: ${JSON.stringify(context.payload)}`,
-          7
+          3
         )
         throw new Error('There is no context')
       }
@@ -134,7 +142,8 @@ export default class SuperLabeler {
         .catch((err: { message: string | Error }) => {
           log(`Error thrown while handling syncLabels tasks: ${err.message}`, 5)
         })
-
+      
+        
       // Mapping of label ids to Github names
       const labelIdToName = await Object.entries(config.labels).reduce(
         (acc: { [key: string]: string }, cur) => {
@@ -143,7 +152,7 @@ export default class SuperLabeler {
         },
         {}
       )
-
+        
       /**
        * Apply labels to context
        * @author IvanFon, TGTGamer, jbinda
