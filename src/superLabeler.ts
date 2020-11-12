@@ -48,8 +48,14 @@ export default class SuperLabeler {
       const configPath = this.opts.configPath
       const dryRun = this.opts.dryRun
       const repo: { repo: string; owner: string } = {
-        owner: process.env.GITHUB_REPOSITORY_OWNER !== undefined ? process.env.GITHUB_REPOSITORY_OWNER : context.repo.owner,
-        repo: process.env.GITHUB_REPOSITORY !== undefined ? process.env.GITHUB_REPOSITORY : context.repo.repo,
+        owner:
+          process.env.GITHUB_REPOSITORY_OWNER !== undefined && dryRun
+            ? process.env.GITHUB_REPOSITORY_OWNER
+            : context.repo.owner,
+        repo:
+          process.env.GITHUB_REPOSITORY !== undefined
+            ? process.env.GITHUB_REPOSITORY
+            : context.repo.repo
       }
 
       log(`Repo data: ${repo.owner}/${repo.repo}`, 1)
@@ -93,10 +99,12 @@ export default class SuperLabeler {
         | { type: 'issue'; context: IssueContext }
 
       if (context.payload.pull_request) {
-        const ctx = await contextHandler.parsePR(context, this.client, repo).catch(err => {
-          log(`Error thrown while parsing PR context: ` + err, 5)
-          throw new Error(err)
-        })
+        const ctx = await contextHandler
+          .parsePR(context, this.client, repo)
+          .catch(err => {
+            log(`Error thrown while parsing PR context: ` + err, 5)
+            throw new Error(err)
+          })
         if (!ctx) {
           throw new Error('Pull Request not found on context')
         }
@@ -142,8 +150,7 @@ export default class SuperLabeler {
         .catch((err: { message: string | Error }) => {
           log(`Error thrown while handling syncLabels tasks: ${err.message}`, 5)
         })
-      
-        
+
       // Mapping of label ids to Github names
       const labelIdToName = await Object.entries(config.labels).reduce(
         (acc: { [key: string]: string }, cur) => {
@@ -152,7 +159,7 @@ export default class SuperLabeler {
         },
         {}
       )
-        
+
       /**
        * Apply labels to context
        * @author IvanFon, TGTGamer, jbinda

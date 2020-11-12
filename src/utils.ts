@@ -60,8 +60,16 @@ class ContextHandler {
     )
 
     const IDNumber = pr.number
-    const labels = await this.parseLabels(pr.labels)
-    const files = await file.list({ client, repo, IDNumber })
+    const labels: Labels = await this.parseLabels(pr.labels).catch(err => {
+      log(`Error thrown while parsing labels: ` + err, 5)
+      throw new Error(err)
+    })
+    const files: string[] = await file
+      .list({ client, repo, IDNumber })
+      .catch(err => {
+        log(`Error thrown while listing files: ` + err, 5)
+        throw new Error(err)
+      })
 
     return {
       labels,
@@ -87,7 +95,10 @@ class ContextHandler {
 
     log(`context.payload.issue: ` + JSON.stringify(context.payload.issue), 1)
 
-    const labels = await this.parseLabels(issue.labels)
+    const labels: Labels = await this.parseLabels(issue.labels).catch(err => {
+      log(`Error thrown while parsing labels: ` + err, 5)
+      throw new Error(err)
+    })
 
     return {
       labels,
@@ -141,16 +152,24 @@ class LabelHandler {
       (await curLabels.filter(l => l.name === labelName).length) > 0
     if (shouldHaveLabel && !hasLabel) {
       log(`Adding label "${labelID}"...`, 1)
-      await labelAPI.add({ client, repo, IDNumber, label: labelName, dryRun })
+      await labelAPI
+        .add({ client, repo, IDNumber, label: labelName, dryRun })
+        .catch(err => {
+          log(`Error thrown while adding labels: ` + err, 5)
+        })
     } else if (!shouldHaveLabel && hasLabel) {
       log(`Removing label "${labelID}"...`, 1)
-      await labelAPI.remove({
-        client,
-        repo,
-        IDNumber,
-        label: labelName,
-        dryRun
-      })
+      await labelAPI
+        .remove({
+          client,
+          repo,
+          IDNumber,
+          label: labelName,
+          dryRun
+        })
+        .catch(err => {
+          log(`Error thrown while removing labels: ` + err, 5)
+        })
     } else {
       log(
         `No action required for label "${labelID}" ${
@@ -195,6 +214,8 @@ class LabelHandler {
         repo,
         shouldHaveLabel,
         dryRun
+      }).catch(err => {
+        log(`Error thrown while running addRemoveLabel: ` + err, 5)
       })
     }
   }
@@ -233,6 +254,8 @@ class LabelHandler {
         repo,
         shouldHaveLabel,
         dryRun
+      }).catch(err => {
+        log(`Error thrown while running addRemoveLabel: ` + err, 5)
       })
     }
   }
@@ -257,7 +280,12 @@ class LabelHandler {
      * !todo Add delete labels
      * @since 2.0.0
      */
-    const curLabels = await labelAPI.get({ client, repo })
+    const curLabels: Labels = await labelAPI
+      .get({ client, repo })
+      .catch(err => {
+        log(`Error thrown while getting labels: ` + err, 5)
+        throw new Error(err)
+      })
     log(`curLabels: ${JSON.stringify(curLabels)}`, 1)
     for (const configLabel of Object.values(config)) {
       const curLabel = await curLabels.filter(
@@ -282,11 +310,11 @@ class LabelHandler {
             )})`,
             1
           )
-          try {
-            await labelAPI.update({ client, repo, label: configLabel, dryRun })
-          } catch (e) {
-            log(`Label update error: ${e.message}`, 5)
-          }
+          await labelAPI
+            .update({ client, repo, label: configLabel, dryRun })
+            .catch(err => {
+              log(`Error thrown while updating label: ` + err, 5)
+            })
         } else {
           log(`No action required to update label: ${label.name}`, 1)
         }
@@ -298,11 +326,11 @@ class LabelHandler {
          */
       } else {
         log(`Create ${JSON.stringify(configLabel)}`, 1)
-        try {
-          await labelAPI.create({ client, repo, label: configLabel, dryRun })
-        } catch (e) {
-          log(`Label Creation failed: ${e.message}`, 5)
-        }
+        await labelAPI
+          .create({ client, repo, label: configLabel, dryRun })
+          .catch(err => {
+            log(`Error thrown while creating label: ` + err, 5)
+          })
       }
     }
   }
