@@ -40,6 +40,7 @@ export interface PRProps extends Props {
   branch: string
   isDraft: boolean
   files: string[]
+  pendingApproval: boolean
   changes: number
 }
 

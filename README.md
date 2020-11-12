@@ -91,14 +91,18 @@ Be sure that Github Actions is enabled for in your repository's settings. Super 
   - [Config File Format](#config-file-format)
   - [Using Regex Patterns](#using-regex-patterns)
   - [Available Conditions](#available-conditions)
-    - [branchMatches](#branchmatches)
-    - [creatorMatches](#creatormatches)
-    - [descriptionMatches](#descriptionmatches)
-    - [filesMatch](#filesmatch)
-    - [isDraft](#isdraft)
-    - [isLocked](#islocked)
-    - [isOpen](#isopen)
-    - [titleMatches](#titlematches)
+    - [Common Conditions](#common-conditions)
+      - [creatorMatches](#creatormatches)
+      - [descriptionMatches](#descriptionmatches)
+      - [isLocked](#islocked)
+      - [isOpen](#isopen)
+      - [titleMatches](#titlematches)
+    - [Pull Request Conditions](#pull-request-conditions)
+      - [changesSize](#changessize)
+      - [branchMatches](#branchmatches)
+      - [filesMatch](#filesmatch)
+      - [isDraft](#isdraft)
+    - [Issue Conditions](#issue-conditions)
   - [Running Locally](#running-locally)
 
 ## How it Works
@@ -192,24 +196,12 @@ If you want to use flags, use the following format: `pattern: "/^wip:/i"` is equ
 
 ## Available Conditions
 
-### branchMatches
+<details>
+<summary><b>Common Conditions</b></summary>
 
-**Applies to: pull requests**
+### Common Conditions
 
-Checks if branch name matches a Regex pattern.
-
-Example:
-
-```json
-{
-  "type": "branchMatches",
-  "pattern": "^bugfix\\/"
-}
-```
-
-### creatorMatches
-
-**Applies to: issues and pull requests**
+#### creatorMatches
 
 Checks if an issue or pull request's creator's username matches a Regex pattern.
 
@@ -222,9 +214,7 @@ Example:
 }
 ```
 
-### descriptionMatches
-
-**Applies to: issues and pull requests**
+#### descriptionMatches
 
 Checks if an issue or pull request's description matches a Regex pattern.
 
@@ -237,9 +227,80 @@ Example:
 }
 ```
 
-### filesMatch
+#### isLocked
 
-**Applies to: pull requests**
+Checks if an issue or pull request is locked.
+
+Example:
+
+```json
+{
+  "type": "isLocked",
+  "value": true
+}
+```
+
+#### isOpen
+
+Checks if an issue or pull request is open or closed.
+
+Example:
+
+```json
+{
+  "type": "isOpen",
+  "value": true
+}
+```
+
+#### titleMatches
+
+Checks if an issue or pull request's title matches a Regex pattern.
+
+Example:
+
+```json
+{
+  "type": "titleMatches",
+  "pattern": "/^wip:/i"
+}
+```
+
+</details>
+
+<details>
+<summary><b>Pull Request Conditions</b></summary>
+  
+### Pull Request Conditions
+
+#### changesSize
+
+Checks if an pull request's changes against `min` & `max` values. Note: if `max` is `undefined` assumed value is `unlimited`
+
+Example:
+
+```json
+{
+  "type": "changesSize",
+  "min": 0,
+  "max": 100
+}
+```
+
+#### branchMatches
+
+Checks if branch name matches a Regex pattern.
+
+Example:
+
+```json
+{
+  "type": "branchMatches",
+  "pattern": "^bugfix\\/"
+}
+```
+
+#### filesMatch
 
 Checks if the files modified in the pull request match a glob.
 
@@ -254,9 +315,7 @@ Example:
 }
 ```
 
-### isDraft
-
-**Applies to: pull requests**
+#### isDraft
 
 Checks if a pull request is a draft.
 
@@ -269,50 +328,14 @@ Example:
 }
 ```
 
-### isLocked
+</details>
 
-**Applies to: issues and pull requests**
+<details>
+<summary><b>Issue Conditions</b></summary>
 
-Checks if an issue or pull request is locked.
+### Issue Conditions
 
-Example:
-
-```json
-{
-  "type": "isLocked",
-  "value": true
-}
-```
-
-### isOpen
-
-**Applies to: issues and pull requests**
-
-Checks if an issue or pull request is open or closed.
-
-Example:
-
-```json
-{
-  "type": "isOpen",
-  "value": true
-}
-```
-
-### titleMatches
-
-**Applies to: issues and pull requests**
-
-Checks if an issue or pull request's title matches a Regex pattern.
-
-Example:
-
-```json
-{
-  "type": "titleMatches",
-  "pattern": "/^wip:/i"
-}
-```
+</details>
 
 ## Running Locally
 
