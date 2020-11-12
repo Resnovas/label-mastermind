@@ -180,7 +180,7 @@ export default class SuperLabeler {
           })
       }
     } catch (err) {
-      log(err.message, 5)
+      log(`Error in supper labeler: ` + err.message, 5)
     }
   }
 }

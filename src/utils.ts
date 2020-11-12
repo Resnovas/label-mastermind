@@ -3,7 +3,7 @@ import { Context } from '@actions/github/lib/context'
 import evaluator, { ConditionSetType } from './conditions/evaluator'
 import { Config, PRContext, IssueContext, Labels } from './types'
 import { labelAPI, file, Repo } from './api'
-import { log } from './'
+import { log } from '.'
 
 class Utils {
   /**
@@ -53,6 +53,12 @@ class ContextHandler {
       return
     }
 
+    log(
+      `context.payload.pull_request: ` +
+        JSON.stringify(context.payload.pull_request),
+      1
+    )
+
     const IDNumber = pr.number
     const labels = await this.parseLabels(pr.labels)
     const files = await file.list({ client, repo, IDNumber })
@@ -78,6 +84,8 @@ class ContextHandler {
     if (!issue) {
       return
     }
+
+    log(`context.payload.issue: ` + JSON.stringify(context.payload.issue), 1)
 
     const labels = await this.parseLabels(issue.labels)
 
@@ -134,8 +142,7 @@ class LabelHandler {
     if (shouldHaveLabel && !hasLabel) {
       log(`Adding label "${labelID}"...`, 1)
       await labelAPI.add({ client, repo, IDNumber, label: labelName, dryRun })
-    }
-    if (!shouldHaveLabel && hasLabel) {
+    } else if (!shouldHaveLabel && hasLabel) {
       log(`Removing label "${labelID}"...`, 1)
       await labelAPI.remove({
         client,
@@ -144,6 +151,13 @@ class LabelHandler {
         label: labelName,
         dryRun
       })
+    } else {
+      log(
+        `No action required for label "${labelID}" ${
+          hasLabel ? 'as label is already applied.' : '.'
+        }`,
+        1
+      )
     }
   }
 
@@ -258,17 +272,10 @@ class LabelHandler {
       if (curLabel.length > 0) {
         const label = curLabel[0]
         if (
-          label.description !== configLabel.description ||
+          (label.description !== configLabel.description &&
+            configLabel.description !== undefined) ||
           label.color !== utils.formatColor(configLabel.color)
         ) {
-          log(`ConfigLabel description is: ${configLabel.description}`, 1)
-          if (
-            configLabel.description == null ||
-            configLabel.description == 'null'
-          ) {
-            log(`label description is: ${label.description}`, 1)
-            if (label.description == undefined) return
-          }
           log(
             `Recreate ${JSON.stringify(configLabel)} (prev: ${JSON.stringify(
               label
@@ -280,6 +287,8 @@ class LabelHandler {
           } catch (e) {
             log(`Label update error: ${e.message}`, 5)
           }
+        } else {
+          log(`No action required to update label: ${label.name}`, 1)
         }
 
         /**

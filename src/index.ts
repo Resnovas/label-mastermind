@@ -21,7 +21,7 @@ try {
 
 const { GITHUB_WORKSPACE = '' } = process.env
 
-const L = new Log({ console: { enabled: false } })
+const L = new Log({ sentry: { enabled: !showLogs, config: { dsn: '' } } })
 export function log(loggingData: string, type: number) {
   L.log({ raw: loggingData }, type)
   if (type == 1) core.debug(loggingData)
@@ -31,6 +31,11 @@ export function log(loggingData: string, type: number) {
 }
 
 function start() {
+  if (dryRun)
+    log(
+      `Super Labeler is running in local dryrun mode. No labels will be applyed`,
+      3
+    )
   const configJSON: Config =
     core.getInput('configJSON') ||
     (local == undefined ? undefined : require(local.configJSON))
