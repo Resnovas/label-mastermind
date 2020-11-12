@@ -3,6 +3,7 @@ import filesMatch, { ConditionFilesMatch } from './filesMatch'
 import isDraft, { ConditionIsDraft } from './isDraft'
 import changesSize, { ConditionChangesSize } from './changesSize'
 import pendingReview, { ConditionPendingReview } from './pendingReview'
+import requestedChanges, { ConditionRequestedChanges } from './requestedChanges'
 import { Condition, handlers as sharedHandlers } from '../'
 
 export type PRCondition =
@@ -11,6 +12,7 @@ export type PRCondition =
   | ConditionIsDraft
   | ConditionChangesSize
   | ConditionPendingReview
+  | ConditionRequestedChanges
   | Condition
 
 const handlers = [
@@ -19,7 +21,8 @@ const handlers = [
   filesMatch,
   isDraft,
   changesSize,
-  pendingReview
+  pendingReview,
+  requestedChanges
 ]
 
 export const getPRConditionHandler = (condition: PRCondition) => {

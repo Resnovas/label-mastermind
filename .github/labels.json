@@ -220,7 +220,7 @@
       "color": "bfdadc",
       "description": "The contributor is developing this issue"
     },
-    "comOpsAwaiting Review": {
+    "comOpsAwaitingReview": {
       "name": "ComOps - Awaiting Review",
       "color": "bfdadc",
       "description": "The contributor is awaiting review"
@@ -1222,6 +1222,15 @@
       "conditions": [
         {
           "type": "pendingReview",
+          "value": true
+        }
+      ]
+    },
+    "devOpsRejected": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "requestedChanges",
           "value": true
         }
       ]

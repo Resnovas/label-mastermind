@@ -41,6 +41,7 @@ export interface PRProps extends Props {
   isDraft: boolean
   files: string[]
   pendingReview: boolean
+  requestedChanges: boolean
   changes: number
 }
 
@@ -72,4 +73,20 @@ export interface Options {
   configJSON: Config
   showLogs: boolean
   dryRun: boolean
+}
+
+export type Reviews = Review[]
+
+export interface Review {
+  id?: number
+  node_id?: string
+  user?: {}
+  body?: string
+  state?: 'APPROVED' | '' | string
+  html_url?: string
+  pull_request_url?: string
+  author_association?: string
+  _links?: {}
+  submitted_at?: string
+  commit_id?: string
 }
