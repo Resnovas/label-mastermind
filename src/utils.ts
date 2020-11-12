@@ -77,7 +77,7 @@ class ContextHandler {
         throw err
       })
     const pendingReview: boolean = await pullRequests
-      .pendingReview({ client, repo, IDNumber }, pr.requested_reviewers)
+      .pendingReview({ client, repo, IDNumber }, pr.requested_reviewers.length)
       .catch(err => {
         log(`Error thrown while handling reviews: ` + err, 5)
         throw err
