@@ -62,13 +62,13 @@ class ContextHandler {
     const IDNumber = pr.number
     const labels: Labels = await this.parseLabels(pr.labels).catch(err => {
       log(`Error thrown while parsing labels: ` + err, 5)
-      throw new Error(err)
+      throw err
     })
     const files: string[] = await file
       .list({ client, repo, IDNumber })
       .catch(err => {
         log(`Error thrown while listing files: ` + err, 5)
-        throw new Error(err)
+        throw err
       })
 
     return {
@@ -97,7 +97,7 @@ class ContextHandler {
 
     const labels: Labels = await this.parseLabels(issue.labels).catch(err => {
       log(`Error thrown while parsing labels: ` + err, 5)
-      throw new Error(err)
+      throw err
     })
 
     return {
@@ -284,7 +284,7 @@ class LabelHandler {
       .get({ client, repo })
       .catch(err => {
         log(`Error thrown while getting labels: ` + err, 5)
-        throw new Error(err)
+        throw err
       })
     log(`curLabels: ${JSON.stringify(curLabels)}`, 1)
     for (const configLabel of Object.values(config)) {

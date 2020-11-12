@@ -47,16 +47,9 @@ export default class SuperLabeler {
       const configJSON = this.opts.configJSON
       const configPath = this.opts.configPath
       const dryRun = this.opts.dryRun
-      const repo: { repo: string; owner: string } = {
-        owner:
-          process.env.GITHUB_REPOSITORY_OWNER !== undefined && dryRun
-            ? process.env.GITHUB_REPOSITORY_OWNER
-            : context.repo.owner,
-        repo:
-          process.env.GITHUB_REPOSITORY !== undefined
-            ? process.env.GITHUB_REPOSITORY
-            : context.repo.repo
-      }
+      const repo = context.repo || {}
+      if (dryRun) repo.repo = process.env.GITHUB_REPOSITORY || 'Unknown'
+      if (dryRun) repo.owner = process.env.GITHUB_REPOSITORY_OWNER || 'Unknown'
 
       log(`Repo data: ${repo.owner}/${repo.repo}`, 1)
 
@@ -103,7 +96,7 @@ export default class SuperLabeler {
           .parsePR(context, this.client, repo)
           .catch(err => {
             log(`Error thrown while parsing PR context: ` + err, 5)
-            throw new Error(err)
+            throw err
           })
         if (!ctx) {
           throw new Error('Pull Request not found on context')
@@ -116,7 +109,7 @@ export default class SuperLabeler {
       } else if (context.payload.issue) {
         const ctx = await contextHandler.parseIssue(context).catch(err => {
           log(`Error thrown while parsing issue context: ` + err, 5)
-          throw new Error(err)
+          throw err
         })
         if (!ctx) {
           throw new Error('Issue not found on context')
