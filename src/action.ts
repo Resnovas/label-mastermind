@@ -45,7 +45,6 @@ export default class labelMastermind {
     log(new loggingData('100', `Superlabeller Constructed: ${options}`))
     this.client = client
     this.opts = options
-    console.log(options.configJSON.runners)
     this.configJSON = options.configJSON
     this.configPath = options.configPath
     this.util = new Utils({ client, repo: this.repo }, options.dryRun)
@@ -163,7 +162,6 @@ export default class labelMastermind {
    * @since 1.0.0
    */
   async processConfig(): Promise<Runners> {
-    console.log(this.configJSON.runners)
     if (!this.configJSON?.runners[0]) {
       if (!fs.existsSync(this.configPath)) {
         throw new Error(`config not found at "${this.configPath}"`)
@@ -171,8 +169,8 @@ export default class labelMastermind {
       const pathConfig = await JSON.parse(
         fs.readFileSync(this.configPath).toString()
       )
-      if (!pathConfig.labelMastermind) return pathConfig
-      else return pathConfig.labelMastermind
+      if (!pathConfig.releaseMastermind) return pathConfig
+      else return pathConfig.releaseMastermind
     } else {
       return this.configJSON
     }
