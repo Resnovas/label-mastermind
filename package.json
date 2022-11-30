@@ -28,7 +28,7 @@
 		"test": "jest"
 	},
 	"dependencies": {
-		"@actions/core": "^1.2.6",
+		"@actions/core": "^1.9.1",
 		"@actions/github": "^5.0.0",
 		"@videndum/utilities": "^1.0.0-alpha.17"
 	},
